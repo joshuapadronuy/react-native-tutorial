@@ -1,66 +1,51 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
-
-import LoginScreen from './screens/LoginScreen';
-import SignupScreen from './screens/SignupScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
-import { Colors } from './constants/styles';
-import AuthContextProvider, { AuthContext } from './store/context/auth-context';
-import { useContext } from 'react';
-import IconButton from './components/ui/IconButton';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
+import AllPlaces from "./screens/AllPlaces";
+import AddPlace from "./screens/AddPlace";
+import IconButton from "./components/UI/IconButton";
+import { Colors } from "./contants/colors";
 
 const Stack = createNativeStackNavigator();
-
-function AuthStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
-    </Stack.Navigator>
-  );
-}
-
-function AuthenticatedStack() {
-  const { logout } = useContext(AuthContext)
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen name="Welcome" component={WelcomeScreen} options={{
-        headerRight: ({tintColor}) => <IconButton icon="exit" color={tintColor} size={24} onPress={logout}/>
-      }} />
-    </Stack.Navigator>
-  );
-}
-
-function Navigation() {
-  const { isAuthenticated } = useContext(AuthContext)
-
-  return (
-      <NavigationContainer>
-        {!isAuthenticated ? <AuthStack /> : <AuthenticatedStack />}
-      </NavigationContainer>
-  );
-}
 
 export default function App() {
   return (
     <>
-      <StatusBar style="light" />
-      <AuthContextProvider>
-        <Navigation />
-      </AuthContextProvider>
+      <StatusBar style="dark" />
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: Colors.primary500 },
+            headerTintColor: Colors.gray700,
+            contentStyle: {
+              backgroundColor: Colors.gray700,
+            },
+          }}
+        >
+          <Stack.Screen
+            name="AllPlaces"
+            component={AllPlaces}
+            options={({ navigation }) => ({
+              title: "Your Favorite Places",
+              headerRight: ({}) => (
+                <IconButton
+                  icon="add"
+                  size={24}
+                  color={tintColor}
+                  onPress={() => navigation.navigate("AddPlace")}
+                />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="AddPlace"
+            component={AddPlace}
+            options={{
+              title: "Add a new Place",
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 }
