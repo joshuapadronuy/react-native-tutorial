@@ -6,10 +6,15 @@ const AllPlaces = ({ route }) => {
   const [loadedPlaces, setLoadedPlaces] = useState([]);
   const isFocused = useIsFocused();
   useEffect(() => {
-    if (isFocused && route.params) {
-      setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+    async function loadPLaces() {
+      const places = await fetchPlaces();
+      setLoadedPlaces(places);
     }
-  }, [route, isFocused]);
+    if (isFocused) {
+      loadPLaces();
+      //setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+    }
+  }, [isFocused]);
   return <PlacesList places={loadedPlaces} />;
 };
 
